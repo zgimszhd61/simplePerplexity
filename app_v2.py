@@ -26,7 +26,7 @@ def reWriteQuestion(question):
     completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "请将问题转化成2个可以用于搜索引擎搜索的关键词,使用空格隔开,以便我可以用于google进行搜索.只需要说关键词，不需要说其他内容"},
+        {"role": "system", "content": "退一步思考，理解问题后，将问题转化成2个可以用于搜索引擎搜索的关键词,使用空格隔开,以便我可以用于google进行搜索.只需要说关键词，不需要说其他内容"},
         {"role": "user", "content": question}
     ]
     )
