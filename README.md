@@ -28,3 +28,5 @@ Web RAG（Retrieval-Augmented Generation）检索程序是一款强大的工具�
 OPENAI_API_KEY="sk-proj-"
 XAPI = ""
 ```
+
+<img width="1168" alt="image" src="https://github.com/zgimszhd61/simplePerplexity/assets/114722053/08ef4e3e-a4b0-433f-8e42-43d2a0931488">
