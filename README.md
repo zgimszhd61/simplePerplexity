@@ -19,3 +19,12 @@ Web RAG（Retrieval-Augmented Generation）检索程序是一款强大的工具�
 - **市场分析**：为市场分析师提供即时的行业信息，支持决策制定。
 - **教育用途**：可用于教育环境中支持课程内容的开发和学生的学习。
 
+## 使用方法
+
+- 本地创建.env。
+- 配置你的surpdev的sk和openai的sk。
+
+```
+OPENAI_API_KEY="sk-proj-"
+XAPI = ""
+```
