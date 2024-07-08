@@ -43,6 +43,7 @@ def findsimillar(mmtext,question):
     for item in texts:
         print("=============")
         print(item)
+        break
 
 
     # 获取嵌入
