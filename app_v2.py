@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from tools import url2domain
 from tools import doEmbedding
+import chardet
+import ftfy
+
 load_dotenv()
 
 ## 在serper.dev申请
@@ -86,11 +89,35 @@ def underStandQuestioninEnglish(question):
 
 ## 3. 获取搜索引擎单页面结果(略)
 def html_to_markdown(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Cache-Control': 'max-age=0',
+        'Cookie':'PHPSESSID=7ne0eflqpcla32afki82mff6p0; __jsluid_s=f3890c0b94affea714ea54dad8ff41d2; __jsl_clearance_s=1720451814.821|0|or%2Fe9JVRKQFYNaFr7cEL79IQ4%2F0%3D; mfw_uuid=668c02e9-5da9-cb4b-ef0f-ea06d584e18b; oad_n=a%3A3%3A%7Bs%3A3%3A%22oid%22%3Bi%3A1029%3Bs%3A2%3A%22dm%22%3Bs%3A15%3A%22www.mafengwo.cn%22%3Bs%3A2%3A%22ft%22%3Bs%3A19%3A%222024-07-08+23%3A16%3A57%22%3B%7D; __mfwc=direct; __mfwa=1720451817780.67466.1.1720451817780.1720451817780; __mfwlv=1720451817; __mfwvn=1; uva=s%3A121%3A%22a%3A3%3A%7Bs%3A2%3A%22lt%22%3Bi%3A1720451818%3Bs%3A10%3A%22last_refer%22%3Bs%3A53%3A%22https%3A%2F%2Fwww.mafengwo.cn%2Fgonglve%2Fziyouxing%2F294156.html%22%3Bs%3A5%3A%22rhost%22%3BN%3B%7D%22%3B; __mfwurd=a%3A3%3A%7Bs%3A6%3A%22f_time%22%3Bi%3A1720451818%3Bs%3A9%3A%22f_rdomain%22%3Bs%3A15%3A%22www.mafengwo.cn%22%3Bs%3A6%3A%22f_host%22%3Bs%3A3%3A%22www%22%3B%7D; __mfwuuid=668c02e9-5da9-cb4b-ef0f-ea06d584e18b; bottom_ad_status=1; Hm_lvt_8288b2ed37e5bc9b4c9f7008798d2de0=1720451819; HMACCOUNT=6768D916BF117168; __jsluid_h=5c7204a7a5468ff932de3d8d4cb5749a; __jsl_clearance=1720453283.008|0|RmWiU5BRJFkb4CT%2BA41sm1FhY%2FU%3D; __mfwb=44ce64d69e65.2.direct; __mfwlt=1720453285; Hm_lpvt_8288b2ed37e5bc9b4c9f7008798d2de0=1720453287',
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'sec-ch-ua':'"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform':"macOS",
+    }
     try:
-        response = requests.get(url)
-        response.encoding = response.apparent_encoding  # 自动检测编码
+        response = requests.get(url, headers=headers)
+        encoding = chardet.detect(response.content)['encoding']
+        print(encoding)
+        # response.encoding = encoding  # 设置正确的编码
         response.raise_for_status()  # 确保请求成功
-        soup = BeautifulSoup(response.text, 'html.parser')
+        if ("Windows-1254" in encoding or "windows-1254"  in encoding):
+            decoded_content = response.content.decode(response.encoding, errors='replace')
+            fixed_content = ftfy.fix_text(decoded_content)
+        else:
+            fixed_content = response.text
+        soup = BeautifulSoup(fixed_content, 'html.parser')
 
         markdown_content = ""
 
@@ -380,9 +407,8 @@ def test():
 aa = []
 # mainInEnglish("喜欢和爱情的区别是什么？")
 # main("喜欢和爱情的区别是什么？")
-main("喜欢和爱情的区别是什么？")
-
-
+# main("心理学真的很难就业吗？")
+main("什么是无限游戏？")
 
 #### 难回答问题:
 ## 问题：杭州有什么小众且好玩的景点？
@@ -394,5 +420,5 @@ main("喜欢和爱情的区别是什么？")
 
 # test()
 
-# url = "http://hz.bendibao.com/tour/202097/92977.shtm"
+# url = "https://m.douban.com/book/subject/25742296/"
 # print(html_to_markdown(url))
